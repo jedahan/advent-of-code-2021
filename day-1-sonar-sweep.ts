@@ -1,11 +1,17 @@
 /*
- *     SESSION=<session cookie from browser> \
- *       deno run \
- *         --allow-read=. \
- *         --allow-write=.cache/ \
- *         --allow-net=adventofcode.com \
- *         --allow-env=SESSION \
- *         day-1-sonar-sweep.ts
+ * # minimal permissions, put the input file in .cache
+ *
+ * deno run --allow-read=.,.cache day-1-sonar-sweep.ts
+ *
+ * # if you want the solution to be downloaded for you
+ *
+ * SESSION=<session cookie from browser> \
+ *   deno run \
+ *     --allow-read=. \
+ *     --allow-write=.cache/ \
+ *     --allow-net=adventofcode.com \
+ *     --allow-env=SESSION \
+ *     day-1-sonar-sweep.ts
  */
 
 import { assert } from "https://deno.land/std/testing/asserts.ts";
