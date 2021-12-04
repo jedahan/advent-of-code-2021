@@ -1,22 +1,32 @@
 // deno run --allow-read=input day-3-sonar-sweep.ts
 
 const path = Deno.args[0] ?? "input";
-const input = await Deno.readTextFile(path);
-console.log(powerConsumption(input));
+const input = (await Deno.readTextFile(path)).split('\n');
+console.log(lifeSupportRating(input));
 
-function powerConsumption(input: string) {
-  let sums: number[] = []
+function lifeSupportRating(input: string[]) {
+  const oxygenRating = rating(input, true)
+  const scrubberRating = rating(input, false)
+  return oxygenRating * scrubberRating
+}
 
-  input
-    .split("\n")
-    .map(binary => binary.split('').map(binstring => binstring==='0' ? -1 : 1))
-    .forEach(binstring => binstring.forEach((value, index) => {
-      if (index >= sums.length) return sums.push(value)
-      sums[index] += value
-    }))
+function rating(input: string[], invert: boolean) {
+  let rating: string[] = []
 
-  const gamma = parseInt(sums.map((sum) => sum > 0 ? '1' : '0').join(''), 2)
-  const epsilon = parseInt(sums.map((sum) => sum < 0 ? '1' : '0').join(''), 2)
+  while(input.length > 1) {
+    const digitSum = input
+      .map((line) => line[rating.length] === '0' ? -1 : 1)
+      .reduce((prev, curr) => prev + curr, 0)
+    
+    const digit = invert 
+      ? (digitSum >= 0 ? '0' : '1') // if most common is 1, take 0
+      : (digitSum >= 0 ? '1' : '0') // if most common is 1, take 1
+    
+    rating.push(digit)
 
-  return gamma * epsilon
+    input = input.filter((line) => line[rating.length-1] === digit)
+  }
+
+  const ratingValue = parseInt(input[0], 2)
+  return ratingValue
 }
